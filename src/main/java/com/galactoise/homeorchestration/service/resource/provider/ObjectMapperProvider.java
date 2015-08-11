@@ -8,12 +8,8 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
-/**
- * This class is needed so that objects shared by HueClient and JAX-RS
- * don't end up throwing serialize exceptions when JAX-RS is responding to the user,
- * since JAX-RS doesn't by default use a filter.
- * 
- * This can also be used if there is a reason to filter any fields that would be returned to the user
+/** 
+ * This can be used if there is a reason to filter any fields that would be returned to the user
  * @author Eric
  *
  */

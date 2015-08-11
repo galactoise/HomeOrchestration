@@ -65,11 +65,16 @@
 		<artifactId>cors-filter</artifactId>
 		<version>1.3.2</version>
 	</dependency>
+	<dependency>
+		<groupId>com.galactoise</groupId>
+		<artifactId>alexa-object-model</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
   </dependencies>
   
   <build>
    
-    <finalName>HueProxy</finalName>
+    <finalName>HomeOrchestration</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
