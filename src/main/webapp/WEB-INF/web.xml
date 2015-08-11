@@ -22,7 +22,7 @@
 	
 	<filter-mapping>
         <filter-name>CORS</filter-name>
-        <servlet-name>HueProxy</servlet-name>
+        <servlet-name>HomeOrchestration</servlet-name>
 	</filter-mapping>
 	
 	<servlet>
