@@ -39,6 +39,14 @@ public class ConversationRequest {
 	public static ConversationRequestBuilder builder(){
 		return new ConversationRequestBuilder();
 	}
+
+	@Override
+	public String toString() {
+		return "ConversationRequest [attributes=" + attributes
+				+ ", conversationHistory=" + conversationHistory
+				+ ", requestName=" + requestName + ", conversationTerminus="
+				+ conversationTerminus + "]";
+	}
 	
 	public static class ConversationRequestBuilder{
 		

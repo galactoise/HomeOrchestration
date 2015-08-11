@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -133,5 +134,38 @@ public class AlexaConversationConverterTest {
 		assertFalse(conversationRequest.getAttributes().containsKey("conversationHistory"));
 		
 		assertTrue(conversationRequest.getConversationHistory().contains("firstItem"));
+	}
+	
+	@Test
+	public void testConvertAlexaInputToConversationRequest_nullAlexaInput(){
+		ConversationRequest conversationRequest = AlexaConversationConverter.convertAlexaInputToConversationRequest(null);
+		assertNotNull(conversationRequest);
+		
+		assertNull(conversationRequest.getAttributes());
+		assertNull(conversationRequest.getConversationHistory());
+		assertNull(conversationRequest.getRequestName());
+		assertNull(conversationRequest.isConversationTerminus());
+	}
+	
+	//Jackson by default will serialize an unknown list into an ArrayList
+	@Test
+	public void testConvertAlexaInputToConversationRequest_arrayListConversationHistory(){
+		ArrayList<String> conversationHistory = new ArrayList<String>();
+		conversationHistory.add("firstItem");
+		alexaInput.getSession().getAttributes().put("conversationHistory", conversationHistory);
+		ConversationRequest conversationRequest = AlexaConversationConverter.convertAlexaInputToConversationRequest(alexaInput);
+		assertNotNull(conversationRequest);
+		
+		assertNotNull(conversationRequest.getAttributes());
+		assertNotNull(conversationRequest.getConversationHistory());
+		assertNotNull(conversationRequest.getRequestName());
+		assertNull(conversationRequest.isConversationTerminus());
+		
+		assertTrue(conversationRequest.getAttributes().containsKey("firstAttribute"));
+		assertFalse(conversationRequest.getAttributes().containsKey("conversationHistory"));
+		
+		assertTrue(conversationRequest.getConversationHistory().contains("firstItem"));
+		
+		assertEquals(conversationRequest.getRequestName(), "intentName");
 	}
 }
