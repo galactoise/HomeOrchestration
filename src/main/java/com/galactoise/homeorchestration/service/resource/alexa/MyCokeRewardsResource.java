@@ -11,10 +11,9 @@ import com.galactoise.alexamodel.AlexaInput;
 import com.galactoise.alexamodel.AlexaOutput;
 import com.galactoise.alexamodel.AlexaOutputSpeech;
 import com.galactoise.alexamodel.AlexaReprompt;
-import com.galactoise.alexamodel.AlexaRequest;
-import com.galactoise.alexamodel.AlexaRequestIntent;
-import com.galactoise.alexamodel.AlexaRequestType;
 import com.galactoise.alexamodel.AlexaResponse;
+import com.galactoise.homeorchestration.conversation.alexa.exception.UnknownIntentException;
+import com.galactoise.homeorchestration.model.alexa.MyCokeRewardsIntents;
 import com.galactoise.homeorchestration.service.manager.MyCokeRewardsManager;
 
 @Path("/alexa/MyCokeRewards")
@@ -22,6 +21,8 @@ import com.galactoise.homeorchestration.service.manager.MyCokeRewardsManager;
 public class MyCokeRewardsResource extends AbstractAlexaResource {
 
 	protected static final Logger LOGGER = Logger.getLogger(MyCokeRewardsResource.class.getName());
+	
+	public static final String LAST_REWARD_STRING_ATTRIBUTE = "lastRewardString";
 	
 	MyCokeRewardsManager myCokeRewardsManager;
 	
@@ -44,19 +45,13 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 			alexaOutput = doLaunchRequest(alexaInput);
 			break;
 		case IntentRequest:
-			doIntentRequest(alexaInput.getRequest());
+			alexaOutput = doIntentRequest(alexaInput);
 			break;
 		default:
 			LOGGER.info("Intent type " + alexaInput.getRequest().getType() + " had no action associated with it.");
 			break;
 		}
 		return alexaOutput;
-	}
-
-	private void doIntentRequest(AlexaRequest alexaRequest) {
-		String rewardString = alexaRequest.getIntent().getSlots().get("rewardString").getValue();
-		
-		myCokeRewardsManager.recordMyCokeReward(rewardString);
 	}
 
 	@Override
@@ -76,6 +71,7 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		AlexaResponse alexaResponse = new AlexaResponse();
 		alexaResponse.setOutputSpeech(alexaOutputSpeech);
 		alexaResponse.setReprompt(alexaReprompt);
+		alexaResponse.setCard(alexaCard);
 		
 		alexaOutput.setResponse(alexaResponse);
 		
@@ -84,9 +80,39 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 
 	@Override
 	public AlexaOutput doIntentRequest(AlexaInput alexaInput) {
+		String intentName = alexaInput.getRequest().getIntent().getName();
+		switch(intentName){
+		case "REWARD":
+			return doRewardIntentRequest(alexaInput);
+		default:
+			throw new UnknownIntentException(alexaInput, "Could not find intent with name " + intentName + " for MyCokeRewards resource.");
+		}
+	}
+	
+	public AlexaOutput doRewardIntentRequest(AlexaInput alexaInput){
+
 		String rewardString = alexaInput.getRequest().getIntent().getSlots().get("rewardString").getValue();
 		
-		myCokeRewardsManager.recordMyCokeReward(rewardString);
-		return null;
+		myCokeRewardsManager.recordMyCokeReward(rewardString);		
+
+		AlexaOutput alexaOutput = generateAlexaOutputFromAlexaInput(alexaInput);
+		AlexaCard alexaCard = new AlexaCard();
+		alexaCard.setTitle("Enter another code");
+		alexaCard.setTitle("If you'd like to enter another code, please do so now");
+		
+		AlexaOutputSpeech alexaOutputSpeech = new AlexaOutputSpeech();
+		alexaOutputSpeech.setText("If you'd like to enter another code, please do so now");
+		alexaOutputSpeech.setType(AlexaOutputSpeech.PLAIN_TEXT_TYPE);
+		
+		AlexaResponse alexaResponse = new AlexaResponse();
+		alexaResponse.setOutputSpeech(alexaOutputSpeech);
+		alexaResponse.setCard(alexaCard);
+		
+		alexaOutput.setResponse(alexaResponse);
+		
+		alexaOutput.getSessionAttributes().put(LAST_REQUEST_INTENT_TYPE_ATTRIBUTE, MyCokeRewardsIntents.REWARD);	
+		alexaOutput.getSessionAttributes().put(LAST_REWARD_STRING_ATTRIBUTE, rewardString);
+		
+		return alexaOutput;
 	}
 }

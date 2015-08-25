@@ -11,6 +11,7 @@ import com.galactoise.homeorchestration.service.resource.AbstractHomeOrchestrati
 
 public abstract class AbstractAlexaResource extends AbstractHomeOrchestrationResource {
 
+	public static final String LAST_REQUEST_INTENT_TYPE_ATTRIBUTE = "lastRequestIntentType";
 	
 	public AlexaOutput generateGenericAlexaOutput(){
 
@@ -38,7 +39,11 @@ public abstract class AbstractAlexaResource extends AbstractHomeOrchestrationRes
 	public AlexaOutput generateAlexaOutputFromAlexaInput(AlexaInput input){
 
     	AlexaOutput output = new AlexaOutput();
-    	output.setSessionAttributes(input.getSession().getAttributes());
+    	if(input.getSession().getAttributes() != null){
+    		output.setSessionAttributes(input.getSession().getAttributes());
+    	}else{
+    		output.setSessionAttributes(new HashMap<String,Object>());
+    	}
     	
     	AlexaResponse response = new AlexaResponse();
     	
