@@ -18,7 +18,7 @@ import com.galactoise.homeorchestration.service.resource.AbstractHomeOrchestrati
 
 @Path("/alexa/AdventureGame")
 @Produces("application/json")
-public class AdventureGameResource extends AbstractHomeOrchestrationResource {
+public class AdventureGameResource extends AbstractAlexaResource {
 
 	protected static final Logger LOGGER = Logger.getLogger(AdventureGameResource.class.getName());
 	
@@ -32,27 +32,16 @@ public class AdventureGameResource extends AbstractHomeOrchestrationResource {
 		
 		return generateGenericAlexaOutput();
 	}
-	
-	public AlexaOutput generateGenericAlexaOutput(){
 
-    	AlexaOutput output = new AlexaOutput();
-    	output.setSessionAttributes(new HashMap<String,Object>());
-    	
-    	AlexaResponse response = new AlexaResponse();
-    	
-    	AlexaOutputSpeech outputSpeech = new AlexaOutputSpeech();
-    	outputSpeech.setText("Test Output");
-    	response.setOutputSpeech(outputSpeech);
-    	
-    	AlexaCard card = new AlexaCard();
-    	card.setContent("Test Output");
-    	card.setTitle("Test Output");
-    	response.setCard(card);
-    	
-    	response.setShouldEndSession(true);
-    	
-    	output.setResponse(response);
-    	
-    	return output;
+	@Override
+	public AlexaOutput doLaunchRequest(AlexaInput alexaInput) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AlexaOutput doIntentRequest(AlexaInput alexaInput) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
