@@ -84,11 +84,13 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		switch(intentName){
 		case "REWARD":
 			return doRewardIntentRequest(alexaInput);
+		case "REPEAT":
+			return doRepeatIntentRequest(alexaInput);
 		default:
-			throw new UnknownIntentException(alexaInput, "Could not find intent with name " + intentName + " for MyCokeRewards resource.");
+			throw new UnknownIntentException(alexaInput, "Could not find intent with name '" + intentName + "' for MyCokeRewards resource.");
 		}
 	}
-	
+
 	public AlexaOutput doRewardIntentRequest(AlexaInput alexaInput){
 
 		String rewardString = alexaInput.getRequest().getIntent().getSlots().get("rewardString").getValue();
@@ -112,6 +114,41 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		
 		alexaOutput.getSessionAttributes().put(LAST_REQUEST_INTENT_TYPE_ATTRIBUTE, MyCokeRewardsIntents.REWARD);	
 		alexaOutput.getSessionAttributes().put(LAST_REWARD_STRING_ATTRIBUTE, rewardString);
+		
+		return alexaOutput;
+	}
+	
+	private AlexaOutput doRepeatIntentRequest(AlexaInput alexaInput) {
+		
+		MyCokeRewardsIntents lastIntentType = MyCokeRewardsIntents.valueOf((String) alexaInput.getSession().getAttributes().get(LAST_REQUEST_INTENT_TYPE_ATTRIBUTE));
+		if(!lastIntentType.equals(MyCokeRewardsIntents.REWARD) && !lastIntentType.equals(MyCokeRewardsIntents.REPEAT)){
+			throw new UnknownIntentException(alexaInput, "Could not repeat input for intent type '" + lastIntentType + "'.");
+		}
+		
+		String lastRewardString = (String) alexaInput.getSession().getAttributes().get(LAST_REWARD_STRING_ATTRIBUTE);
+
+		AlexaOutput alexaOutput = generateAlexaOutputFromAlexaInput(alexaInput);
+		AlexaCard alexaCard = new AlexaCard();
+		alexaCard.setTitle(lastRewardString);
+		alexaCard.setTitle("Last reward string recorded was, " + lastRewardString);
+		
+		AlexaOutputSpeech alexaOutputSpeech = new AlexaOutputSpeech();
+		alexaOutputSpeech.setText(lastRewardString);
+		alexaOutputSpeech.setType(AlexaOutputSpeech.PLAIN_TEXT_TYPE);
+		
+		AlexaResponse alexaResponse = new AlexaResponse();
+		alexaResponse.setOutputSpeech(alexaOutputSpeech);
+		alexaResponse.setCard(alexaCard);
+		
+		AlexaReprompt alexaReprompt = new AlexaReprompt();
+		AlexaOutputSpeech alexaRepromptOutputSpeech = new AlexaOutputSpeech();
+		alexaRepromptOutputSpeech.setText("If you'd like to hear it again, please say repeat.  Otherwise, enter another code.");
+		alexaRepromptOutputSpeech.setType(AlexaOutputSpeech.PLAIN_TEXT_TYPE);
+		alexaReprompt.setOutputSpeech(alexaRepromptOutputSpeech);		
+		
+		alexaOutput.setResponse(alexaResponse);
+		
+		alexaOutput.getSessionAttributes().put(LAST_REQUEST_INTENT_TYPE_ATTRIBUTE, MyCokeRewardsIntents.REPEAT);
 		
 		return alexaOutput;
 	}
