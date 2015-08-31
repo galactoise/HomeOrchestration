@@ -12,7 +12,7 @@ import com.galactoise.alexamodel.AlexaOutput;
 import com.galactoise.alexamodel.AlexaOutputSpeech;
 import com.galactoise.alexamodel.AlexaReprompt;
 import com.galactoise.alexamodel.AlexaResponse;
-import com.galactoise.homeorchestration.conversation.alexa.exception.UnknownIntentException;
+import com.galactoise.homeorchestration.exception.conversation.alexa.UnknownIntentException;
 import com.galactoise.homeorchestration.model.alexa.MyCokeRewardsIntents;
 import com.galactoise.homeorchestration.service.manager.MyCokeRewardsManager;
 

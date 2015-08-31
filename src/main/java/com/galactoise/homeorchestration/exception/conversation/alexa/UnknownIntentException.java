@@ -1,4 +1,4 @@
-package com.galactoise.homeorchestration.conversation.alexa.exception;
+package com.galactoise.homeorchestration.exception.conversation.alexa;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
