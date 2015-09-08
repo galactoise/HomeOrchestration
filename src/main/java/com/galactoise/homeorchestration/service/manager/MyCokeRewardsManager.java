@@ -32,10 +32,10 @@ public class MyCokeRewardsManager {
 		properties = PropertiesSingleton.getPropertiesSingletonInstance().getProperties();
 		DesiredCapabilities capability = DesiredCapabilities.htmlUnit();
 		capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-		/*capability.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, properties.getProperty("phantomjs.executable.path"));
-		rewardsPage = new MyCokeRewardsPage(new PhantomJSDriver(capability));*/
-		System.setProperty("webdriver.chrome.driver", "C:\\apps\\chromedriver\\chromedriver.exe");
-		rewardsPage = new MyCokeRewardsPage(new ChromeDriver());
+		capability.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, properties.getProperty("phantomjs.executable.path"));
+		rewardsPage = new MyCokeRewardsPage(new PhantomJSDriver(capability));
+//		System.setProperty("webdriver.chrome.driver", "C:\\apps\\chromedriver\\chromedriver.exe");
+//		rewardsPage = new MyCokeRewardsPage(new ChromeDriver());
 	}
 	
 	public void recordMyCokeReward(String rewardString){
