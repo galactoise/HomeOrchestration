@@ -11,3 +11,4 @@
 .classpath
 .settings*
 *.properties*
+phantomjsdriver.log

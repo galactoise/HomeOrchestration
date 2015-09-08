@@ -94,7 +94,8 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 	public AlexaOutput doRewardIntentRequest(AlexaInput alexaInput){
 
 		String rewardString = alexaInput.getRequest().getIntent().getSlots().get("rewardString").getValue();
-		
+
+		rewardString = MyCokeRewardsManager.scrubRewardString(rewardString);
 		myCokeRewardsManager.recordMyCokeReward(rewardString);		
 
 		AlexaOutput alexaOutput = generateAlexaOutputFromAlexaInput(alexaInput);

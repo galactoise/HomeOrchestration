@@ -3,6 +3,7 @@ package com.galactoise.homeorchestration.service.manager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.galactoise.homeorchestration.exception.mycokerewards.RewardStringException;
@@ -55,5 +56,14 @@ public class MyCokeRewardsManagerTest {
 		String output = MyCokeRewardsManager.scrubRewardString(rewardString);
 		assertNotNull(output);
 		assertEquals("WTF69", output);
+	}
+	
+	@Test
+	@Ignore
+	public void testRecordRewardString(){
+		String rewardString = "VK4THKTJJ5WFF9";
+		
+		MyCokeRewardsManager myCokeRewardsManager = new MyCokeRewardsManager();
+		myCokeRewardsManager.recordMyCokeReward(rewardString);
 	}
 }
