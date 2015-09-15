@@ -30,9 +30,22 @@ public class AdventureGameResource extends AbstractAlexaResource {
 		
 		LOGGER.info("Conversation Request: " + conversationRequest);
 		
-		return generateGenericAlexaOutput();
+		AlexaOutput output = generateGenericAlexaOutput();
+		String outputString;
+		switch(conversationRequest.getRequestName()){
+			case "LAUNCH":
+				outputString = "You are standing in a dark room.";
+				break;
+			default:
+				outputString = "Couldn't understand request.  Worst. Adventure. Ever.";
+				break;
+		}
+		
+		output.getResponse().getOutputSpeech().setText(outputString);
+		output.getResponse().getCard().setContent(outputString);
+		
+		return output;
 	}
-
 	@Override
 	public AlexaOutput doLaunchRequest(AlexaInput alexaInput) {
 		// TODO Auto-generated method stub
