@@ -19,15 +19,17 @@ import com.galactoise.homeorchestration.service.manager.MyCokeRewardsManager;
 @Path("/alexa/MyCokeRewards")
 @Produces("application/json")
 public class MyCokeRewardsResource extends AbstractAlexaResource {
+	
+	public static MyCokeRewardsManager myCokeRewardsManager = new MyCokeRewardsManager(); //Instead of this, make a selenium thread pool inside manager
 
 	protected static final Logger LOGGER = Logger.getLogger(MyCokeRewardsResource.class.getName());
 	
 	public static final String LAST_REWARD_STRING_ATTRIBUTE = "lastRewardString";
 	
-	MyCokeRewardsManager myCokeRewardsManager;
+//	MyCokeRewardsManager myCokeRewardsManager;
 	
 	public MyCokeRewardsResource(){
-		myCokeRewardsManager = new MyCokeRewardsManager();
+		//myCokeRewardsManager = new MyCokeRewardsManager();
 	}
 	
 	@POST
