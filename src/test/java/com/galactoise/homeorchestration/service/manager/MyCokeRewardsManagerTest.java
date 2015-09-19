@@ -38,6 +38,14 @@ public class MyCokeRewardsManagerTest {
 		assertEquals("WTF69", output);
 	}
 
+	@Test
+	public void testScrubRewardString_wordsReplaced(){
+		String rewardString = "are and in seven zero";
+		String output = MyCokeRewardsManager.scrubRewardString(rewardString);
+		assertNotNull(output);
+		assertEquals("RNN70", output);
+	}
+
 	@Test(expected = RewardStringException.class)
 	public void testScrubRewardString_invalidLetter(){
 		String rewardString = "w t s six nine";

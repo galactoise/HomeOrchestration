@@ -30,11 +30,11 @@ public class MyCokeRewardsManager {
 	
 	public MyCokeRewardsManager(){
 		properties = PropertiesSingleton.getPropertiesSingletonInstance().getProperties();
-//		DesiredCapabilities capability = DesiredCapabilities.htmlUnit();
-//		capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-//		capability.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, properties.getProperty("phantomjs.executable.path"));
-//		rewardsPage = new MyCokeRewardsPage(new PhantomJSDriver(capability));
-		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+		DesiredCapabilities capabilities = DesiredCapabilities.htmlUnit();
+		capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, properties.getProperty("phantomjs.executable.path"));
+		rewardsPage = new MyCokeRewardsPage(new PhantomJSDriver(capabilities));
+		/*DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 		String chromeBinaryPath = "C:" + File.separator + "Users" + File.separator + "Eric" + File.separator + "AppData" + File.separator + "Local" + File.separator + "Google" + File.separator + "Chrome" + File.separator + "Application" + File.separator + "chrome.exe";
 		String chromeDriverPath = "C:" + File.separator + "apps" + File.separator + "chromedriver" + File.separator + "chromedriver.exe";
 		capabilities.setCapability(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath);
@@ -50,7 +50,7 @@ public class MyCokeRewardsManager {
 		
 		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
 		System.setProperty("chrome.binary",chromeBinaryPath);
-		rewardsPage = new MyCokeRewardsPage(new ChromeDriver(capabilities));
+		rewardsPage = new MyCokeRewardsPage(new ChromeDriver(capabilities));*/
 	}
 	
 	public void recordMyCokeReward(String rewardString){
@@ -104,6 +104,9 @@ public class MyCokeRewardsManager {
 			throw new RewardStringException("Reward string was null.");
 		}
 		String cleanRewardString = rewardString.replace(".", "");
+		cleanRewardString = cleanRewardString.replace("are", "r");
+		cleanRewardString = cleanRewardString.replace("and", "n");
+		cleanRewardString = cleanRewardString.replace(" in", " n");
 		String outputString = "";
 		String[] rewardStringTokens = cleanRewardString.split(" ");
 		for(String rewardStringToken : rewardStringTokens){
