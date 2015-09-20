@@ -1,5 +1,6 @@
 package com.galactoise.homeorchestration.service.resource.alexa;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import javax.ws.rs.POST;
@@ -12,7 +13,9 @@ import com.galactoise.alexamodel.AlexaOutput;
 import com.galactoise.alexamodel.AlexaOutputSpeech;
 import com.galactoise.alexamodel.AlexaReprompt;
 import com.galactoise.alexamodel.AlexaResponse;
+import com.galactoise.homeorchestration.exception.conversation.alexa.AlexaException;
 import com.galactoise.homeorchestration.exception.conversation.alexa.UnknownIntentException;
+import com.galactoise.homeorchestration.exception.mycokerewards.MyCokeRewardsPageException;
 import com.galactoise.homeorchestration.model.alexa.MyCokeRewardsIntents;
 import com.galactoise.homeorchestration.service.manager.MyCokeRewardsManager;
 
@@ -26,12 +29,6 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 	
 	public static final String LAST_REWARD_STRING_ATTRIBUTE = "lastRewardString";
 	
-//	MyCokeRewardsManager myCokeRewardsManager;
-	
-	public MyCokeRewardsResource(){
-		//myCokeRewardsManager = new MyCokeRewardsManager();
-	}
-	
 	@POST
 	public AlexaOutput recordMyCokeReward(AlexaInput alexaInput){
 		LOGGER.info(alexaInput.toString());
@@ -41,7 +38,6 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		if(alexaInput == null || alexaInput.getRequest() == null){
 			LOGGER.info("input was not valid.");
 		}
-		
 		switch(alexaInput.getRequest().getType()){
 		case LaunchRequest:
 			alexaOutput = doLaunchRequest(alexaInput);
@@ -98,7 +94,26 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		String rewardString = alexaInput.getRequest().getIntent().getSlots().get("rewardString").getValue();
 
 		rewardString = MyCokeRewardsManager.scrubRewardString(rewardString);
-		myCokeRewardsManager.recordMyCokeReward(rewardString);		
+		
+		try{
+			myCokeRewardsManager.recordMyCokeReward(rewardString);
+		}catch(MyCokeRewardsPageException e){
+			LOGGER.info("Exception caught: " + e.getMessage());
+			if(e.isRecoverable()){
+				AlexaException alexaException = new AlexaException(alexaInput, e.getErrorMessage());
+				alexaException.getResponse().setShouldEndSession(false);
+				alexaException.getResponse().setReprompt(new AlexaReprompt(alexaException.getResponse().getOutputSpeech()));
+				
+				if(alexaException.getSessionAttributes() == null){
+					alexaException.setSessionAttributes(new HashMap<String,Object>());
+				}
+				alexaException.getSessionAttributes().put(LAST_REQUEST_INTENT_TYPE_ATTRIBUTE, MyCokeRewardsIntents.REWARD);	
+				alexaException.getSessionAttributes().put(LAST_REWARD_STRING_ATTRIBUTE, rewardString);
+				return alexaException;
+			}else{
+				return new AlexaException(alexaInput, e.getErrorMessage());
+			}
+		}
 
 		AlexaOutput alexaOutput = generateAlexaOutputFromAlexaInput(alexaInput);
 		AlexaCard alexaCard = new AlexaCard();

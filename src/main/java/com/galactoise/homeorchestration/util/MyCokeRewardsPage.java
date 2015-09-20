@@ -164,7 +164,8 @@ public class MyCokeRewardsPage {
 		try{
 			WebElement enterCodeErrorMessage = driver.findElement(By.className("enterCodeErrorMessage"));
 			if(enterCodeErrorMessage.isDisplayed()){
-				throw new MyCokeRewardsPageException("Error during recording was: " + enterCodeErrorMessage.getText());
+				LOGGER.info("Error during recording was: " + enterCodeErrorMessage.getText());
+				throw new MyCokeRewardsPageException(enterCodeErrorMessage.getText(), true);
 			}
 		}catch(NoSuchElementException e){
 			throw new MyCokeRewardsPageException("Could not find error code box.");

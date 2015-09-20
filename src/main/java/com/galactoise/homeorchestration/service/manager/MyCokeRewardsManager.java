@@ -107,6 +107,8 @@ public class MyCokeRewardsManager {
 		cleanRewardString = cleanRewardString.replace("are", "r");
 		cleanRewardString = cleanRewardString.replace("and", "n");
 		cleanRewardString = cleanRewardString.replace(" in", " n");
+		cleanRewardString = cleanRewardString.replace("in ", "n ");
+		cleanRewardString = cleanRewardString.replace("be", "b");
 		String outputString = "";
 		String[] rewardStringTokens = cleanRewardString.split(" ");
 		for(String rewardStringToken : rewardStringTokens){

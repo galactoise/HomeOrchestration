@@ -40,10 +40,10 @@ public class MyCokeRewardsManagerTest {
 
 	@Test
 	public void testScrubRewardString_wordsReplaced(){
-		String rewardString = "are and in seven zero";
+		String rewardString = "are and in be seven zero";
 		String output = MyCokeRewardsManager.scrubRewardString(rewardString);
 		assertNotNull(output);
-		assertEquals("RNN70", output);
+		assertEquals("RNNB70", output);
 	}
 
 	@Test(expected = RewardStringException.class)
