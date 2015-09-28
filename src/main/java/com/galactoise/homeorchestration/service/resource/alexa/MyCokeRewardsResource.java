@@ -98,7 +98,7 @@ public class MyCokeRewardsResource extends AbstractAlexaResource {
 		try{
 			myCokeRewardsManager.recordMyCokeReward(rewardString);
 		}catch(MyCokeRewardsPageException e){
-			LOGGER.info("Exception caught: " + e.getMessage());
+			LOGGER.info("Exception caught: " + e.getErrorMessage());
 			if(e.isRecoverable()){
 				AlexaException alexaException = new AlexaException(alexaInput, e.getErrorMessage());
 				alexaException.getResponse().setShouldEndSession(false);

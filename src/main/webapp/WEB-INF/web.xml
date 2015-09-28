@@ -39,6 +39,12 @@
 
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	
+	<servlet>
+		<servlet-name>MyCokeRewards</servlet-name>
+		<servlet-class>com.galactoise.homeorchestration.util.MyCokeRewardsServlet</servlet-class>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>HomeOrchestration</servlet-name>
 		<url-pattern>/rest/*</url-pattern>

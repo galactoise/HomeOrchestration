@@ -1,22 +1,13 @@
 package com.galactoise.homeorchestration.service.manager;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
 import com.galactoise.homeorchestration.exception.mycokerewards.MyCokeRewardsPageException;
 import com.galactoise.homeorchestration.exception.mycokerewards.RewardStringException;
+import com.galactoise.homeorchestration.util.MyCokeRewardsDriverSingleton;
 import com.galactoise.homeorchestration.util.MyCokeRewardsPage;
 import com.galactoise.homeorchestration.util.PropertiesSingleton;
 
@@ -30,27 +21,7 @@ public class MyCokeRewardsManager {
 	
 	public MyCokeRewardsManager(){
 		properties = PropertiesSingleton.getPropertiesSingletonInstance().getProperties();
-		DesiredCapabilities capabilities = DesiredCapabilities.htmlUnit();
-		capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-		capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, properties.getProperty("phantomjs.executable.path"));
-		rewardsPage = new MyCokeRewardsPage(new PhantomJSDriver(capabilities));
-		/*DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-		String chromeBinaryPath = "C:" + File.separator + "Users" + File.separator + "Eric" + File.separator + "AppData" + File.separator + "Local" + File.separator + "Google" + File.separator + "Chrome" + File.separator + "Application" + File.separator + "chrome.exe";
-		String chromeDriverPath = "C:" + File.separator + "apps" + File.separator + "chromedriver" + File.separator + "chromedriver.exe";
-		capabilities.setCapability(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, chromeDriverPath);
-		ChromeOptions options = new ChromeOptions();
-
-		options.setBinary(chromeBinaryPath);
-		LOGGER.info("ChromeDriver path: " + chromeDriverPath);
-		LOGGER.info("ChromeBinary path: " + chromeBinaryPath);
-		capabilities.setCapability("chrome.binary", chromeBinaryPath);
-		capabilities.setCapability("webdriver.chrome.driver", chromeDriverPath);
-		capabilities.setPlatform(Platform.WINDOWS);
-		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-		
-		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-		System.setProperty("chrome.binary",chromeBinaryPath);
-		rewardsPage = new MyCokeRewardsPage(new ChromeDriver(capabilities));*/
+		rewardsPage = new MyCokeRewardsPage(MyCokeRewardsDriverSingleton.getInstance().getDriver());
 	}
 	
 	public void recordMyCokeReward(String rewardString){
@@ -63,17 +34,20 @@ public class MyCokeRewardsManager {
 			rewardsPage.goTo(properties.getProperty("mycokerewards.homepageurl"));
 			if(!rewardsPage.checkOnHomepage(properties.getProperty("mycokerewards.homepageurl"))){
 				rewardsPage.screenshotCurrentPage();
+				finish = System.currentTimeMillis();
+				LOGGER.info("Failed to browse to homepage in " + (finish - start) + "ms");
 				throw new MyCokeRewardsPageException("Could not browse to homepage, looping back to page: " + rewardsPage.getDriver().getCurrentUrl());
 			}else{
-				LOGGER.info("Now on home page.");
+				finish = System.currentTimeMillis();
+				LOGGER.info("Browsed to homepage in " + (finish - start) + "ms");
 			}
 		}
+		start = System.currentTimeMillis();
 		if(rewardsPage.checkLoggedInToHomepage()){
-			finish = System.currentTimeMillis();
-			LOGGER.info("Confirmed on homepage in " + (finish - start) + "ms");
+			//Do something?
 		}else{
 			finish = System.currentTimeMillis();
-			LOGGER.info("Discovered not on homepage in " + (finish - start) + "ms");
+			LOGGER.info("Discovered not logged in to homepage in " + (finish - start) + "ms");
 			
 			start = System.currentTimeMillis();
 			rewardsPage.login(properties.getProperty("mycokerewards.loginurl"), properties.getProperty("mycokerewards.user.email"),properties.getProperty("mycokerewards.user.password"));

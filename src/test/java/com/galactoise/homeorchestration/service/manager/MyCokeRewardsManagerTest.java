@@ -5,8 +5,11 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 
 import com.galactoise.homeorchestration.exception.mycokerewards.RewardStringException;
+import com.galactoise.homeorchestration.util.MyCokeRewardsDriverSingleton;
+import com.galactoise.homeorchestration.util.MyCokeRewardsPage;
 
 public class MyCokeRewardsManagerTest {
 
@@ -73,5 +76,16 @@ public class MyCokeRewardsManagerTest {
 		
 		MyCokeRewardsManager myCokeRewardsManager = new MyCokeRewardsManager();
 		myCokeRewardsManager.recordMyCokeReward(rewardString);
+	}
+	
+	@Test
+	@Ignore
+	public void testSingleton(){
+		MyCokeRewardsDriverSingleton instance = MyCokeRewardsDriverSingleton.getInstance();
+		assertNotNull(instance);
+		WebDriver driver = instance.getDriver();
+		assertNotNull(driver);
+		MyCokeRewardsPage rewardsPage = new MyCokeRewardsPage(driver);
+		assertNotNull(rewardsPage);
 	}
 }

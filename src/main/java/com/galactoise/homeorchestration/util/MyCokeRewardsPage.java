@@ -91,7 +91,6 @@ public class MyCokeRewardsPage {
 			WebElement profilePointAmount = driver.findElement(By.id("h-profilePointAmount"));
 			if(!profilePointAmount.isDisplayed()){
 				LOGGER.info("Profile point amount field is not displayed.");
-				LOGGER.info("Profile point amount: " + profilePointAmount.getAttribute("innerHTML"));
 				screenshotCurrentPage();
 				return false;
 			}
@@ -180,9 +179,8 @@ public class MyCokeRewardsPage {
 		start = System.currentTimeMillis();
 		goTo(loginUrl);
 		finish = System.currentTimeMillis();
-		LOGGER.info("Finished loading homepage in " + (finish - start) + "ms");
+		LOGGER.info("Finished loading login page in " + (finish - start) + "ms");
 		
-		driver.manage().addCookie(new Cookie("skipSocial", "twitterfacebook"));
 		String pageUrl = driver.getCurrentUrl();
 		try{
 			start = System.currentTimeMillis();
@@ -326,5 +324,10 @@ public class MyCokeRewardsPage {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "MyCokeRewardsPage [driver=" + driver + "]";
 	}
 }
